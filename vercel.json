@@ -1,0 +1,23 @@
+{
+  "services": {
+    "frontend": {
+      "root": "frontend/",
+      "framework": "vite"
+    },
+    "backend": {
+      "root": ".",
+      "framework": "fastapi",
+      "entrypoint": "main:app"
+    }
+  },
+  "rewrites": [
+    { "source": "/health(.*)", "destination": { "service": "backend" } },
+    { "source": "/memories(.*)", "destination": { "service": "backend" } },
+    { "source": "/chat(.*)", "destination": { "service": "backend" } },
+    { "source": "/sessions(.*)", "destination": { "service": "backend" } },
+    { "source": "/docs(.*)", "destination": { "service": "backend" } },
+    { "source": "/redoc(.*)", "destination": { "service": "backend" } },
+    { "source": "/openapi.json", "destination": { "service": "backend" } },
+    { "source": "/(.*)", "destination": { "service": "frontend" } }
+  ]
+}
