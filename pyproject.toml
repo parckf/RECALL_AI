@@ -1,22 +1,6 @@
-[project]
-name = "recall-ai"
-version = "0.1.0"
-description = "Graph-backed AI tutoring memory agent"
-requires-python = ">=3.12"
-dependencies = [
-    "falkordb==1.8.0",
-    "fastapi==0.143.1",
-    "uvicorn==0.54.0",
-    "pydantic==2.14.1",
-    "pydantic-settings==2.16.0",
-    "python-dotenv==1.2.4",
-    "httpx==0.28.1",
-    "google-genai==2.31.0",
-]
-
 [tool.ruff]
 line-length = 100
-target-version = "py312"
+target-version = "py314"
 src = ["backend"]
 extend-exclude = ["backend/.venv", "backend/venv", "frontend/node_modules"]
 
