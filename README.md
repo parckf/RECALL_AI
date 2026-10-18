@@ -93,7 +93,7 @@ cp backend/.env.example backend/.env
 Open `backend/.env` and verify your configuration:
 - `FALKORDB_PASSWORD`: Matches the `FALKORDB_PASSWORD` set in root `.env` and used by `docker-compose.yml` (required; no hard-coded default).
 - `LLM_PROVIDER`: `gemini` (default)
-- `LLM_MODEL`: `gemini-3.5-flash` (configured as the default; Google currently routes this model ID to Gemini 3.6 Flash. Set `LLM_MODEL` in `backend/.env` to override it.)
+- `LLM_MODEL`: `gemini-3.8-flash` (Google Gemini 3.8 Flash is configured as the default model; setting `LLM_MODEL` in `backend/.env` overrides it to any supported model such as `gemini-2.5-flash`, `gpt-4o-mini`, etc.)
 - `GEMINI_API_KEY`: Add your Google Gemini API key here for live tutoring. (Automated tests run completely mocked without requiring an API key).
 - `SUPABASE_URL` and `SUPABASE_SECRET_KEY`: Configure persistent chat history. Use a server-only Supabase secret key (`sb_secret_...`), never a publishable key; keep it in `backend/.env`, not in frontend files or source control. Apply [`backend/migrations/001_chat_history.sql`](backend/migrations/001_chat_history.sql) once in the target project's SQL Editor. If omitted, chat history falls back to local storage.
 
@@ -131,19 +131,6 @@ Open your browser at `http://localhost:5173`.
 ### GitHub Pages preview
 
 The GitHub Actions workflow publishes the frontend at `https://parckf.github.io/RECALL_AI/` after a push to `main` (or a manual workflow run). This is an **offline UI preview** built with `VITE_API_MODE=mock`; it does not connect to FalkorDB, Gemini, or Supabase. Use the Docker and backend steps above for the live graph-backed agent. In the repository's **Settings → Pages**, choose **GitHub Actions** as the build and deployment source before the first deployment.
-
-### One-project Vercel deployment
-
-The root `vercel.json` configures the Vite frontend and FastAPI backend as Vercel Services, so both use one Vercel project and public domain. The API paths (`/health`, `/chat`, `/memories`, and `/sessions`) route to FastAPI; other paths route to the frontend. Set these project environment variables before deploying:
-
-- `VITE_API_MODE=live`
-- `VITE_API_BASE_URL=/` (same-origin API)
-- `LLM_PROVIDER=gemini`
-- `LLM_MODEL=gemini-3.5-flash`
-- `GEMINI_API_KEY` (server-only secret)
-- `FALKORDB_HOST`, `FALKORDB_PORT`, and `FALKORDB_PASSWORD` for a hosted FalkorDB instance
-
-The Gemini and FalkorDB values belong in Vercel's server-side environment variables, never in frontend `VITE_` variables. The local Docker database is not reachable from Vercel. Vercel Services are currently in beta.
 
 ---
 

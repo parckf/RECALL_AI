@@ -5,8 +5,7 @@
  * Never silently falls back to mock when live mode encounters an error.
  */
 
-const DEFAULT_API_BASE_URL = import.meta.env?.PROD ? "" : "http://127.0.0.1:8000";
-const API_BASE_URL = (import.meta.env?.VITE_API_BASE_URL || DEFAULT_API_BASE_URL).replace(/\/$/, "");
+const API_BASE_URL = (import.meta.env?.VITE_API_BASE_URL || "http://127.0.0.1:8000").replace(/\/$/, "");
 export const API_MODE = (import.meta.env?.VITE_API_MODE || "mock").toLowerCase().trim();
 
 const FETCH_TIMEOUT_MS = 30000;
