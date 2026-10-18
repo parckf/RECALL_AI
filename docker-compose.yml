@@ -1,0 +1,17 @@
+services:
+  falkordb:
+    image: falkordb/falkordb:latest
+    container_name: recallai_falkordb
+    ports:
+      - "127.0.0.1:6379:6379"
+      - "127.0.0.1:3000:3000"
+    environment:
+      - FALKORDB_PASSWORD=${FALKORDB_PASSWORD:?Set FALKORDB_PASSWORD in .env}
+      - REDIS_ARGS=--requirepass ${FALKORDB_PASSWORD:?Set FALKORDB_PASSWORD in .env} --appendonly yes --appendfsync everysec
+    volumes:
+      - falkordb_data:/var/lib/falkordb/data
+    restart: unless-stopped
+
+volumes:
+  falkordb_data:
+    name: recallai_falkordb_data
