@@ -35,10 +35,10 @@ jobs:
         working-directory: frontend
         run: npm ci
 
-      - name: Build offline demo frontend
+      - name: Build Gemini browser demo frontend
         working-directory: frontend
         env:
-          VITE_API_MODE: mock
+          VITE_API_MODE: gemini-browser
         run: npm run build
 
       - name: Upload Pages artifact

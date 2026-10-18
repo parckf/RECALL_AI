@@ -3,7 +3,7 @@ import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import ChatArea from './components/ChatArea';
 import EvidenceDrawer from './components/EvidenceDrawer';
-import { RenameModal, DeleteModal } from './components/Modals';
+import { RenameModal, DeleteModal, GeminiKeyModal } from './components/Modals';
 import {
   getHealth,
   getMemories,
@@ -23,7 +23,10 @@ import {
   setStoredActiveSessionId,
   resolveInitialSessionId,
   buildChatHistory,
-  formatFriendlyErrorMessage
+  formatFriendlyErrorMessage,
+  isGeminiBrowserMode,
+  getGeminiBrowserKey,
+  saveGeminiBrowserKey
 } from './api';
 
 const DEMO_USERS = [
@@ -54,7 +57,7 @@ export default function App() {
 
   // Health and Storage Status
   const [systemHealth, setSystemHealth] = useState(null);
-  const [isHistoryOffline, setIsHistoryOffline] = useState(false);
+  const [isHistoryOffline, setIsHistoryOffline] = useState(isGeminiBrowserMode);
   const [isSending, setIsSending] = useState(false);
 
   // UI Drawer and Sidebar state
@@ -65,6 +68,8 @@ export default function App() {
   // Modals state
   const [renameModal, setRenameModal] = useState({ isOpen: false, session: null });
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, session: null });
+  const [isGeminiKeyModalOpen, setIsGeminiKeyModalOpen] = useState(false);
+  const [hasGeminiKey, setHasGeminiKey] = useState(() => Boolean(getGeminiBrowserKey()));
 
   // Refs for tracking active user, session, search, and abort controllers
   const activeUserRef = useRef(userId);
@@ -634,7 +639,10 @@ export default function App() {
         isDrawerOpen={isDrawerOpen}
         onToggleDrawer={() => setIsDrawerOpen(prev => !prev)}
         onToggleSidebar={() => setIsSidebarOpen(prev => !prev)}
+        onConfigureGemini={() => setIsGeminiKeyModalOpen(true)}
+        hasGeminiKey={hasGeminiKey}
       />
+      {isGeminiBrowserMode && <div style={{ padding: '0.55rem 1rem', textAlign: 'center', background: 'var(--surface-2)', color: 'var(--muted)', fontSize: '0.8rem' }}>Gemini browser preview · chat history stays in this browser · FalkorDB graph memory is not connected on GitHub Pages</div>}
 
       {/* Main Layout Body */}
       <div className="app-body">
@@ -698,6 +706,13 @@ export default function App() {
         sessionTitle={deleteModal.session?.title || ''}
         onConfirm={handleConfirmDelete}
         onClose={() => setDeleteModal({ isOpen: false, session: null })}
+      />
+      <GeminiKeyModal
+        isOpen={isGeminiKeyModalOpen}
+        hasKey={hasGeminiKey}
+        onSave={(key) => { saveGeminiBrowserKey(key); setHasGeminiKey(true); setSystemHealth(prev => ({ ...prev, llm_configured: true })); setIsGeminiKeyModalOpen(false); }}
+        onClear={() => { saveGeminiBrowserKey(''); setHasGeminiKey(false); setSystemHealth(prev => ({ ...prev, llm_configured: false })); }}
+        onClose={() => setIsGeminiKeyModalOpen(false)}
       />
     </div>
   );

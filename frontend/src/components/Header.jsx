@@ -7,7 +7,9 @@ export default function Header({
   activeMemoriesCount,
   isDrawerOpen,
   onToggleDrawer,
-  onToggleSidebar
+  onToggleSidebar,
+  onConfigureGemini,
+  hasGeminiKey
 }) {
   const isDbConnected = systemHealth?.database === 'connected';
   const historyStatus = isHistoryOffline ? 'LocalStorage' : 'Supabase';
@@ -30,6 +32,7 @@ export default function Header({
       </div>
 
       <div className="header-right">
+        {API_MODE === 'gemini-browser' && <button className="btn-secondary" onClick={onConfigureGemini}>{hasGeminiKey ? 'Gemini connected' : 'Set Gemini key'}</button>}
         {/* Mode pill */}
         <span className={`pill ${API_MODE === 'live' ? 'active' : 'warn'}`}>
           <span className="pill-dot" />
